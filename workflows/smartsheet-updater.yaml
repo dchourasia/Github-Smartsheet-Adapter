@@ -1,0 +1,26 @@
+name: Update GH Issues to Smartsheet
+run-name: Update GH Issues to Smartsheet
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */2 * * *'
+
+jobs:
+  github-to-jira:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Update Smartsheet
+        env:
+          GITHUB_TOKEN: ${{ secrets.GTJ_GH_TOKEN }}
+          SMARTSHEET_ACCESS_TOKEN: ${{ secrets.SMARTSHEET_ACCESS_TOKEN }}
+        run: |
+          python src
